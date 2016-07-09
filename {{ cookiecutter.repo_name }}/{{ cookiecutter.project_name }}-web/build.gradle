@@ -1,0 +1,37 @@
+apply plugin: 'application'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+repositories {
+  jcenter()
+}
+
+dependencies {
+  compile group: "ch.qos.logback", name: "logback-classic", version: parent.ext.logbackVersion
+
+  compile group: "io.vertx", name: "vertx-auth-jwt", version: parent.ext.vertxVersion
+  compile group: "io.vertx", name: "vertx-core",     version: parent.ext.vertxVersion
+  compile group: "io.vertx", name: "vertx-web",      version: parent.ext.vertxVersion
+  
+  testCompile group: "io.vertx", name: "vertx-unit", version: parent.ext.vertxVersion
+}
+
+mainClassName = 'io.vertx.core.Launcher'
+
+applicationDistribution.from(parent.projectDir) {
+  include 'LICENSE'
+  include 'NOTICE'
+  include 'README.md'
+  into ''
+}
+
+shadowJar {
+  classifier = 'fat'
+  
+  manifest {
+    attributes 'Main-Verticle': "${group}.ServiceVerticle"
+  }
+  
+  mergeServiceFiles {
+    include 'META-INF/services/io.vertx.core.spi.VerticleFactory'
+  }
+}

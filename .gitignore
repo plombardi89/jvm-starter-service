@@ -1,0 +1,5 @@
+# --- K Desktop Environment ("KDE") ---
+.directory
+
+# --- Mac OS X ---
+.DS_Store
