@@ -29,7 +29,7 @@ quark-compile:
 quark-install:
 	# Compiles AND installs Quark language sources if there are any.
 	
-run:
+run-docker:
 	# Startup the application for dev/testing/experimentation.
  
 test:

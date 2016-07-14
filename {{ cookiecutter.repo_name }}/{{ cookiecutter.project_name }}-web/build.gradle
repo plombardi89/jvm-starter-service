@@ -1,8 +1,17 @@
 apply plugin: 'application'
 apply plugin: 'com.github.johnrengelman.shadow'
 
-repositories {
-  jcenter()
+ext {
+  // Quark dependencies should be specified as below. The $group, $name, and $version are the values used to
+  // resolve from Maven. The $src is the URL or file path to a Quark source file.
+  quarkDependencies = [
+      [
+          group   : 'datawire_mdk',
+          name    : 'datawire_mdk',
+          version : '2.0.0',
+          src     : 'https://raw.githubusercontent.com/datawire/mdk/master/quark/mdk-2.0.q'
+      ],
+  ]
 }
 
 dependencies {
