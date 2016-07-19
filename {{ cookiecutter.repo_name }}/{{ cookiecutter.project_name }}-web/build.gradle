@@ -14,6 +14,20 @@ ext {
   ]
 }
 
+quarkInstall = task quarkInstall()
+
+ext.quarkDependencies.each { Map depInfo ->
+  def name = "${depInfo.name}-${depInfo.version}"
+
+  task "quarkInstall_${name}"(type: Exec) {
+    executable 'quark'
+    args       'install', '--java', depInfo.src
+  }
+
+  quarkInstall.dependsOn "quarkInstall_${name}"
+  project.dependencies.add('compile', "${depInfo.group}:${depInfo.name}:${depInfo.version}")
+}
+
 dependencies {
   compile group: "ch.qos.logback", name: "logback-classic", version: parent.ext.logbackVersion
 
