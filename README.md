@@ -6,7 +6,3 @@ Provides the basic project structure for developing a microservice that uses Jav
 
 1. Ensure you have the `cookiecutter` program installed: `pip install cookiecutter`. Documentation for Cookiecutter can be found on the [Cookiecutter](https://pages.github.com/) repository.
 2. Run `cookiecutter gh:datawire/cookiecutter-vertx` and answer the prompts. Beyond changing `name` most default values should be sane.
-
-
-
-
