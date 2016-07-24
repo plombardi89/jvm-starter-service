@@ -22,7 +22,7 @@ ext {
   junitVersion   = '4.12'
   logbackVersion = '1.1.7'
   slf4jVersion   = '1.7.21'
-  vertxVersion   = '3.3.0'
+  vertxVersion   = '3.3.2'
 }
 
 allprojects {

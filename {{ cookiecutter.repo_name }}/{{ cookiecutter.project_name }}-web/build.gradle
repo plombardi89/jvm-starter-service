@@ -14,17 +14,23 @@ ext {
   ]
 }
 
-quarkInstall = task quarkInstall()
+task quarkInstall() { }
 
-ext.quarkDependencies.each { Map depInfo ->
-  def name = "${depInfo.name}-${depInfo.version}"
+tasks.whenTaskAdded { t ->
+  if(t.name.equals('build')){
+    t.dependsOn quarkInstall
+  }
+}
 
-  task "quarkInstall_${name}"(type: Exec) {
+ext.quarkDependencies.each { depInfo ->
+  def depName = "${depInfo.name}-${depInfo.version}".toString()
+
+  task "quarkInstall_${depName}"(type: Exec) {
     executable 'quark'
     args       'install', '--java', depInfo.src
   }
 
-  quarkInstall.dependsOn "quarkInstall_${name}"
+  quarkInstall.dependsOn "quarkInstall_${depName}"
   project.dependencies.add('compile', "${depInfo.group}:${depInfo.name}:${depInfo.version}")
 }
 
@@ -51,7 +57,7 @@ shadowJar {
   classifier = 'fat'
   
   manifest {
-    attributes 'Main-Verticle': "${group}.ServiceVerticle"
+    attributes 'Main-Verticle': "${project.group}.ServiceVerticle"
   }
   
   mergeServiceFiles {

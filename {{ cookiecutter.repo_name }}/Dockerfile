@@ -1,25 +1,30 @@
-FROM alpine:3.4
+FROM java:openjdk-8-jre-alpine
 MAINTAINER Datawire Inc, <dev@datawire.io>
-EXPOSE 5000
 
-LABEL PROJECT_REPO_URL         = "{{ cookiecutter.repo_url }}"
-LABEL PROJECT_REPO_BROWSER_URL = "{{ cookiecutter.repo_browser_url }}"
-LABEL DESCRIPTION              = "Datawire {{ cookiecutter.name }}"
-LABEL VENDOR                   = "Datawire"
-LABEL VENDOR_URL               = "https://datawire.io/"
+# Exposed Ports
+# ----------------------------------------------------------
+# 5000  : {{ cookiecutter.project_name }}
+# 5701  : Hazelcast Clustering
+EXPOSE 5000 5701
 
-ENV JAVA_HOME=/usr/lib/jvm/default-jvm
+LABEL PROJECT_REPO_URL = "{{ cookiecutter.repo_url }}" \
+      PROJECT_REPO_BROWSER_URL = "{{ cookiecutter.repo_browser_url }}" \
+      PROJECT_LICENSE = "{{ cookiecutter.repo_browser_url }}/LICENSE" \
+      DESCRIPTION = "Datawire {{ cookiecutter.name }}" \
+      VENDOR = "Datawire" \
+      VENDOR_URL = "https://datawire.io/"
 
-RUN apk add --update bash && \
-    apk add --no-cache openjdk8 && \
-    ln -sf "${JAVA_HOME}/bin/"* "/usr/bin/" && \
-    rm -rf /var/cache/apk/*
+RUN apk --no-cache add \
+    bash \
+  && ln -snf /bin/bash /bin/sh
 
-COPY {{ cookiecutter.project_name }}-web/build/libs/{{ cookiecutter.project_name }}-web-*-fat.jar /opt/{{ cookiecutter.project_name }}/
-RUN  ln -s /opt/{{ cookiecutter.project_name }}/{{ cookiecutter.project_name }}-web-*-fat.jar /opt/{{ cookiecutter.project_name }}/{{ cookiecutter.project_name }}-web.jar
+RUN mkdir /var/log/datawire
 
-ENTRYPOINT ["java", \
-            "-Dvertx.logger-delegate-factory-class-name=io.vertx.core.logging.SLF4JLogDelegateFactory", \
-            "-Dlogback.configurationFile="/opt/{{ cookiecutter.project_name }}/logback.xml", \
-            "-jar",  "/opt/{{ cookiecutter.project_name }}/{{ cookiecutter.project_name }}-web.jar", \
-            "-conf", "/opt/{{ cookiecutter.project_name }}/{{ cookiecutter.project_name }}.json"] 
+WORKDIR /opt/{{ cookiecutter.project_name }}/
+
+COPY {{ cookiecutter.project_name }}/build/libs/flobber-web-*-fat.jar ./{{ cookiecutter.project_name }}.jar
+
+COPY {{ cookiecutter.project_name }}/src/docker/entrypoint.sh ./entrypoint.sh
+RUN  chmod +x entrypoint.sh
+
+ENTRYPOINT ["./entrypoint.sh"]
