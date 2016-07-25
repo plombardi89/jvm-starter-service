@@ -16,7 +16,7 @@
 
     <group>
         <name>{{ cookiecutter.project_name }}</name>
-        <password>{{ cookiecutter.project_name }</password>
+        <password>{{ cookiecutter.project_name }}</password>
     </group>
 
     <import resource="config/cluster-${app.env}.xml" />
