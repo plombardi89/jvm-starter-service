@@ -22,7 +22,7 @@ RUN mkdir /var/log/datawire
 
 WORKDIR /opt/{{ cookiecutter.project_name }}/
 
-COPY {{ cookiecutter.project_name }}/build/libs/flobber-web-*-fat.jar ./{{ cookiecutter.project_name }}.jar
+COPY {{ cookiecutter.project_name }}/build/libs/{{ cookiecutter.project_name }}-web-*-fat.jar ./{{ cookiecutter.project_name }}.jar
 
 COPY {{ cookiecutter.project_name }}/src/docker/entrypoint.sh ./entrypoint.sh
 RUN  chmod +x entrypoint.sh
