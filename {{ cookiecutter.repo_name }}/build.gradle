@@ -1,5 +1,10 @@
+import groovy.json.JsonSlurper
+
 buildscript {
   ext.shadowPluginVersion = '1.2.3'
+  {%- if cookiecutter.jvm_language == "kotlin" -%}
+  ext.kotlinVersion = '1.0.3'
+  {% endif %}
 
   repositories {
     jcenter()
@@ -7,8 +12,13 @@ buildscript {
 
   dependencies {
     classpath "com.github.jengelman.gradle.plugins:shadow:${shadowPluginVersion}"
+    {%- if cookiecutter.jvm_language == "kotlin" -%}
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    {% endif %}
   }
 }
+
+apply plugin: 'com.github.johnrengelman.shadow'
 
 if (!JavaVersion.current().java8Compatible) {
   throw new IllegalArgumentException('''A Haiku:
@@ -17,52 +27,68 @@ if (!JavaVersion.current().java8Compatible) {
                                       |  Upgrade. Try again.'''.stripMargin())
 }
 
+// load the Datawirefile information into Gradle
+def datawireInfo = new JsonSlurper().parse(file("Datawirefile"))
+
+group   = '{{ cookiecutter.project_package }}'
+version = datawireInfo.service.version
+
 ext {
   assertjVersion = '3.5.1'
   junitVersion   = '4.12'
   logbackVersion = '1.1.7'
-  slf4jVersion   = '1.7.21'
   vertxVersion   = '3.3.2'
 }
 
-allprojects {
-  apply plugin: 'base'
+apply plugin: 'java'
+{%- if cookiecutter.jvm_language == "kotlin" -%}
+apply plugin: 'kotlin'
+{%- elif cookiecutter.jvm_language == "groovy" -%}
+apply plugin: 'groovy'
+{% endif %}
 
-  group   = projectGroup
-  version = projectVersion  
-  
-  repositories {
-    jcenter()
-  }
+repositories {
+  jcenter()
+  mavenLocal()
 }
 
-subprojects {
-  apply plugin: 'java'
+dependencies {
+  compile group: "ch.qos.logback", name: "logback-classic", version: logbackVersion
+  compile group: "io.vertx",       name: "vertx-auth-jwt",  version: vertxVersion
+  compile group: "io.vertx",       name: "vertx-core",      version: vertxVersion
+  compile group: "io.vertx",       name: "vertx-web",       version: vertxVersion
 
-  sourceCompatibility = '1.8'
-  targetCompatibility = '1.8'
-  
-  repositories {
-    jcenter()
-    mavenLocal()
-  }
+  {%- if cookiecutter.jvm_language == "kotlin" -%}
+  compile group: "org.jetbrains.kotlin", name: "kotlin-stdlib", version: kotlinVersion
+  {%- elif cookiecutter.jvm_language == "groovy" -%}
+  compile group: "org.codehaus.groovy", name: "groovy-all", version: '2.4.7'
+  {% endif %}
 
-  dependencies {
-    compile group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
-  
-    testCompile group: 'org.assertj', name: 'assertj-core', version: assertjVersion
-    testCompile group: 'junit',       name: 'junit',        version: junitVersion
-  }
-
-  tasks.withType(Tar) {
-    compression = Compression.GZIP
-  }
+  testCompile group: "io.vertx",    name: "vertx-unit",   version: vertxVersion
+  testCompile group: 'org.assertj', name: 'assertj-core', version: assertjVersion
+  testCompile group: 'junit',       name: 'junit',        version: junitVersion
 }
 
-task version << {
-  println version
+
+// Ensures we always produce GZIP compressed tarballs.
+tasks.withType(Tar) {
+  compression = Compression.GZIP
 }
 
+// Make acquiring the Gradle wrapper painless.
 task wrapper(type: Wrapper) {
   gradleVersion = '{{ cookiecutter.gradle_version }}'
+}
+
+shadowJar {
+  classifier = 'fat'
+
+  manifest {
+    attributes 'Main-Class'    : 'io.vertx.core.Launcher'
+    attributes 'Main-Verticle' : "${project.group}.ServiceVerticle"
+  }
+
+  mergeServiceFiles {
+    include 'META-INF/services/io.vertx.core.spi.VerticleFactory'
+  }
 }

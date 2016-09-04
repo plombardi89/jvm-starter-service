@@ -1,0 +1,21 @@
+# --- Miscellaenous Project Stuff
+Makefile
+
+# --- Java / JVM ---
+*.jar
+*.war
+*.ear
+
+# --- Gradle ---
+!gradle/wrapper/gradle-wrapper.jar
+gradlew.bat
+.gradle
+
+# --- IntelliJ IDEA ---
+.idea
+
+# --- Vert.x ---
+.vertx
+
+# --- Python ---
+*.pyc

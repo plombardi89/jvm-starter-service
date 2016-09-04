@@ -20,7 +20,7 @@ public class ServiceVerticle extends AbstractVerticle {
     HttpServer server = vertx.createHttpServer();
     Router router = Router.router(vertx);
 
-    router.get("/api/v1/hello/:name").handler( routingContext -> {
+    router.get("/hello/:name").handler( routingContext -> {
       HttpServerRequest request = routingContext.request();
 
       JsonObject json = new JsonObject()
