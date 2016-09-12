@@ -13,7 +13,7 @@ buildscript {
   dependencies {
     classpath "com.github.jengelman.gradle.plugins:shadow:${shadowPluginVersion}"
     {%- if cookiecutter.jvm_language == "kotlin" -%}
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
     {% endif %}
   }
 }
