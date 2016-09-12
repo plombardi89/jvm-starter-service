@@ -10,6 +10,8 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
+import mdk.Functions;
+import mdk.MDK;
 
 import java.time.Instant;
 
@@ -17,12 +19,16 @@ public class ServiceVerticle extends AbstractVerticle {
 
   private final static Logger logger = LoggerFactory.getLogger(ServiceVerticle.class);
 
+  private MDK mdk = null;
+
   public ServiceVerticle() {
     super();
   }
 
   @Override
   public void start(Future<Void> startFuture) throws Exception {
+    mdk = Functions.init();
+    mdk.start();
     logger.info("Datawire MDK started");
     super.start(startFuture);
   }

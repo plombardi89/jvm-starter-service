@@ -9,14 +9,18 @@ target
 .idea
 *.iml
 
-# --- K Desktop Environment ("KDE") ---
+# --- OS Junk ---
 .directory
-
-# --- Mac OS X ---
 .DS_Store
 
 # --- Gradle ---
 .gradle
+
+# --- Vert.x ---
+.vertx
+
+# --- Python ---
+*.pyc
 
 # --- Secrets ---
 *.key
