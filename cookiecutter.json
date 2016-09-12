@@ -13,11 +13,10 @@
   "project_package_path" : "{{ cookiecutter.project_package | replace('.', '/') }}",
   "project_version"      : "0.1.0",
 
-  "gradle_version"       : "3.0",
-
   "_copy_without_render": [
     "gradlew",
     "gradlew.bat",
+    "gradle/wrapper/gradle-wrapper.properties",
     "gradle/wrapper/gradle-wrapper.jar"
   ]
 }

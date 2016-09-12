@@ -77,7 +77,7 @@ tasks.withType(Tar) {
 
 // Make acquiring the Gradle wrapper painless.
 task wrapper(type: Wrapper) {
-  gradleVersion = '{{ cookiecutter.gradle_version }}'
+  gradleVersion = '3.0'
 }
 
 shadowJar {
