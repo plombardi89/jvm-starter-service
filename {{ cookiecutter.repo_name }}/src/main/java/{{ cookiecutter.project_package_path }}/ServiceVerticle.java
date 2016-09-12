@@ -30,6 +30,14 @@ public class ServiceVerticle extends AbstractVerticle {
     mdk = Functions.init();
     mdk.start();
     logger.info("Datawire MDK started");
+
+    Runtime.getRuntime().addShutdownHook(new Thread() {
+      @Override public void run() {
+        mdk.stop();
+        logger.info("Datawire MDK stopped");
+      }
+    });
+
     super.start(startFuture);
   }
 
@@ -50,5 +58,12 @@ public class ServiceVerticle extends AbstractVerticle {
     });
 
     server.requestHandler(router::accept).listen(config().getInteger("port", 5000));
+  }
+
+  public void registerWithDiscovery() {
+    mdk.register(System.getProperty("mdk.service.name"),
+                 System.getProperty("mdk.service.version"),
+                 String.format("http://%s:%s", System.getProperty("mdk.service.host"),
+                                               System.getProperty("mdk.service.port")))
   }
 }

@@ -36,6 +36,11 @@ docker-run: docker-build
 		-it \
 		--rm \
 		--name $(SERVICE_NAME)-$(SERVICE_VERSION) \
+		-e DATAWIRE_TOKEN=$(DATAWIRE_TOKEN) \
+		-e MDK_SERVICE_NAME=$(SERVICE_NAME) \
+		-e MDK_SERVICE_VERSION=$(SERVICE_VERSION) \
+		-e DATAWIRE_ROUTABLE_HOST=127.0.0.1 \
+		-e DATAWIRE_ROUTABLE_PORT=5000 \
 		-p 5000:5000 \
 		-v $$(pwd)/config:/opt/{{ cookiecutter.project_name }}/config \
 		$(DOCKER_REPO):$(SERVICE_VERSION) \
