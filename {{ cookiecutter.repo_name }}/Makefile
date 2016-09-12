@@ -26,7 +26,9 @@ docker-sh:
 	( \
 		docker run -it --rm \
 		--name $(SERVICE_NAME)-shell \
+		-e DATAWIRE_TOKEN=$(DATAWIRE_TOKEN) \
 		--entrypoint /bin/sh \
+		-p 5000:5000 \
 		$(DOCKER_REPO):$(SERVICE_VERSION) \
 	)
 
