@@ -56,7 +56,7 @@ repositories {
 dependencies {
   compile group: "ch.qos.logback", name: "logback-classic", version: logbackVersion
 
-  compile group: "io.datawire.mdk", name: "datawire_mdk", version: datawireMdkVersions
+  compile group: "io.datawire.mdk", name: "datawire_mdk", version: datawireMdkVersion
 
   compile group: "io.vertx",       name: "vertx-core",      version: vertxVersion
   compile group: "io.vertx",       name: "vertx-web",       version: vertxVersion
