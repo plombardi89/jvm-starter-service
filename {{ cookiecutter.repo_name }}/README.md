@@ -1,10 +1,10 @@
 # Datawire {{ cookiecutter.name }}"
 
-{{ cookiecutter.description }}
-
 # User Testing Instructions
 
-A Docker container can be started by executing `make docker`
+A Docker container can be started by executing `make docker-run`
+
+A Docker container that boots into a shell session (plain ol' `/bin/sh`) can be accessed via `make docker-sh`
 
 # Developer Instructions
 
@@ -19,19 +19,7 @@ Main-Class: io.vertx.core.Launcher
 VM Options:
   -Dlogback.configurationFile=config/logback.xml
   -Dvertx.logger-delegate-factory-class-name=io.vertx.core.logging.SLF4JLogDelegateFactory
-Program Arguments: run io.datawire.{{ cookiecutter.project_name }}.ServiceVerticle -conf config/{{ cookiecutter.project_name }}-develop.json
+Program Arguments: run io.datawire.{{ cookiecutter.project_name }}.ServiceVerticle -conf config/{{ cookiecutter.project_name }}.json
 Working Directory: $MODULE_DIR$
 Use Classpath of Module: {{ cookiecutter.project_name }}-web
 ```
-
-# License
-
-{%- if cookiecutter.license == "Apache Software License 2.0" -%}
-
-Datawire {{ cookiecutter.name }} is open-source software licensed under **Apache 2.0**. Please see [LICENSE](LICENSE) for further details.
-
-{%- elif cookiecutter.license == "Datawire Proprietary" -%}
-
-Datawire {{ cookiecutter.name }} is closed-source software. Please see [LICENSE](LICENSE) for further details.
-
-{% endif %}

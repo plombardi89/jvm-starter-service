@@ -1,47 +1,44 @@
 # Makefile: {{ cookiecutter.project_name }}
 
-VERSION=$(shell cat VERSION)
+SERVICE_NAME=$(shell cat Datawirefile | python -c 'import sys, json; print json.load(sys.stdin)["service"]["name"]')
+SERVICE_VERSION=$(shell cat Datawirefile | python -c 'import sys, json; print json.load(sys.stdin)["service"]["version"]')
+
+DOCKER_REGISTRY_HOST={{ cookiecutter.docker_registry_host }}
+DOCKER_REPO={{ cookiecutter.docker_organization }}/$(SERVICE_NAME)
 
 .PHONY: all
 
 all: clean build
 
 build:
-	# Produces a language build artifact (e.g.: .jar, .whl, .gem).
-	./gradlew build test shadowJar
- 
-docker: build
-	# Produces a Docker image.
-	docker build -t datawire/{{ cookiecutter.project_name }}:$(VERSION) .
-
-docker-no-jar-build:
-	# Produces a Docker image but do not trigger recompilation and packaging of the source.
-	docker build -t datawire/{{ cookiecutter.project_name }}:$(VERSION) .
+	./gradlew test shadowJar
 
 clean:
-	# Clean previous build outputs (e.g. class files) and temporary files.
 	./gradlew clean
- 
+
 compile:
-	# Compile code (may do nothing for interpreted languages).
 	./gradlew build
 
-run-docker: docker
-	# Run the service or application in docker.
+docker-build:
+	docker build -t $(DOCKER_REPO):$(SERVICE_VERSION) .
+
+docker-sh:
 	( \
-		docker run -it --rm --name datawire-{{ cookiecutter.project_name }} \
-		-p 5000:5000 \
-		-v $$(pwd)/{{ cookiecutter.project_name }}-web/config:/opt/{{ cookiecutter.project_name }}/config \
-		datawire/{{ cookiecutter.project_name }}:$(VERSION) \
+		docker run -it --rm \
+		--name $(SERVICE_NAME)-shell \
+		--entrypoint /bin/sh \
+		$(DOCKER_REPO):$(SERVICE_VERSION) \
 	)
 
-run-docker-no-jar-rebuild:
-	# Run the service or application in docker.
+docker-run: docker-build
 	( \
-		docker run -it --rm --name datawire-{{ cookiecutter.project_name }} \
+		docker run \
+		-it \
+		--rm \
+		--name $(SERVICE_NAME)-$(SERVICE_VERSION) \
 		-p 5000:5000 \
-		-v $$(pwd)/{{ cookiecutter.project_name }}-web/config:/opt/{{ cookiecutter.project_name }}/config \
-		datawire/{{ cookiecutter.project_name }}:$(VERSION) \
+		-v $$(pwd)/config:/opt/{{ cookiecutter.project_name }}/config \
+		$(DOCKER_REPO):$(SERVICE_VERSION) \
 	)
  
 test:
@@ -51,4 +48,7 @@ unit-test:
 	./gradlew test
 
 version:
-	@echo VERSION
+	@echo SERVICE_VERSION
+
+service-name:
+	@echo SERVICE_NAME

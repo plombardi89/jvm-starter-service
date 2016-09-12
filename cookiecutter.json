@@ -1,17 +1,17 @@
 {
   "name"                 : null,
   "jvm_language"         : ["java", "kotlin", "groovy"],
-  "description"          : "A JVM Datawire microservice based on Vert.x",
   "repo_name"            : "{{ cookiecutter.name | lower | replace(' ', '-') | replace ('_', '-') }}",
   "repo_url"             : "git@github.com:datawire/{{ cookiecutter.repo_name }}.git",
   "repo_browser_url"     : "https://github.com/datawire/{{ cookiecutter.repo_name }}",
-
-  "license"              : ["Apache Software License 2.0", "Datawire Proprietary"],
 
   "project_name"         : "{{ cookiecutter.repo_name }}",
   "project_package"      : "io.datawire.{{ cookiecutter.repo_name | replace('-', '') | replace ('_', '') }}",
   "project_package_path" : "{{ cookiecutter.project_package | replace('.', '/') }}",
   "project_version"      : "0.1.0",
+
+  "docker_registry_host" : ["us.gcr.io", "docker.io"],
+  "docker_organization"  : "datawireio",
 
   "_copy_without_render": [
     "gradlew",

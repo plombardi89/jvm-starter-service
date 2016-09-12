@@ -1,7 +1,5 @@
-# --- K Desktop Environment ("KDE") ---
+# --- OS Junk ---
 .directory
-
-# --- Mac OS X ---
 .DS_Store
 
 # --- Intellij IDEA ---
