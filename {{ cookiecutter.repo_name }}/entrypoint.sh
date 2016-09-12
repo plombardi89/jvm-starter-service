@@ -2,7 +2,7 @@
 set -x
 
 APP_NAME="{{ cookiecutter.project_name }}"
-APP_JAR="${APP_NAME}-fat.jar"
+APP_JAR="${APP_NAME}.jar"
 APP_CONFIG="config/${APP_NAME}.json"
 
 JAVA_EXECUTABLE=java
