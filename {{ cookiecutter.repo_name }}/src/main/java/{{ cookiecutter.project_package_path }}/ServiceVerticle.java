@@ -60,7 +60,7 @@ public class ServiceVerticle extends AbstractVerticle {
     server.requestHandler(router::accept).listen(config().getInteger("port", 5000));
   }
 
-  public void registerWithDiscovery() {
+  private void registerWithDiscovery() {
     mdk.register(System.getProperty("mdk.service.name"),
                  System.getProperty("mdk.service.version"),
                  String.format("http://%s:%s", System.getProperty("mdk.service.host"),
