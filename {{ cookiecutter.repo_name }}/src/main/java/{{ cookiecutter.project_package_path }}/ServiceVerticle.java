@@ -64,6 +64,6 @@ public class ServiceVerticle extends AbstractVerticle {
     mdk.register(System.getProperty("mdk.service.name"),
                  System.getProperty("mdk.service.version"),
                  String.format("http://%s:%s", System.getProperty("mdk.service.host"),
-                                               System.getProperty("mdk.service.port")))
+                                               System.getProperty("mdk.service.port")));
   }
 }
