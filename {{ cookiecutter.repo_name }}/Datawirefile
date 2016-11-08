@@ -1,9 +1,0 @@
-{
-  "_datawirefileVersion": 1,
-
-  "service": {
-    "name": "{{ cookiecutter.project_name }}",
-    "version": "{{ cookiecutter.project_version }}",
-    "public": true
-  }
-}

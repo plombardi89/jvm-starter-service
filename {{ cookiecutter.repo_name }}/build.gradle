@@ -1,20 +1,20 @@
 import groovy.json.JsonSlurper
 
 buildscript {
+  {%- if cookiecutter.jvm_language == "kotlin" %}
+  ext.kotlinVersion = '1.0.4'
+  {% endif -%}
   ext.shadowPluginVersion = '1.2.3'
-  {% if cookiecutter.jvm_language == "kotlin" %}
-  ext.kotlinVersion = '1.0.3'
-  {% endif %}
-
+  
   repositories {
     jcenter()
   }
 
   dependencies {
     classpath "com.github.jengelman.gradle.plugins:shadow:${shadowPluginVersion}"
-    {% if cookiecutter.jvm_language == "kotlin" %}
+    {%- if cookiecutter.jvm_language == "kotlin" %}
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-    {% endif %}
+    {%- endif %}
   }
 }
 
@@ -27,27 +27,19 @@ if (!JavaVersion.current().java8Compatible) {
                                       |  Upgrade. Try again.'''.stripMargin())
 }
 
-// load the Datawirefile information into Gradle
-def datawireInfo = new JsonSlurper().parse(file("Datawirefile"))
-
 group   = '{{ cookiecutter.project_package }}'
-version = datawireInfo.service.version
+version = '{{ cookiecutter.project_version }}'
 
 ext {
-  assertjVersion = '3.5.1'
-  datawireMdkVersion = '2.0.11'
-  junitVersion   = '4.12'
-  logbackVersion = '1.1.7'
-  vertxVersion   = '3.3.2'
+  junitVersion       = '4.12'
+  logbackVersion     = '1.1.7'
+  vertxVersion       = '3.3.3'
 }
 
 apply plugin: 'java'
-
-{% if cookiecutter.jvm_language == "kotlin" %}
+{%- if cookiecutter.jvm_language == "kotlin" %}
 apply plugin: 'kotlin'
-{% elif cookiecutter.jvm_language == "groovy" %}
-apply plugin: 'groovy'
-{% endif %}
+{%- endif %}
 
 repositories {
   jcenter()
@@ -57,19 +49,12 @@ repositories {
 dependencies {
   compile group: "ch.qos.logback", name: "logback-classic", version: logbackVersion
 
-  compile group: "io.datawire.mdk", name: "datawire_mdk", version: datawireMdkVersion
-
   compile group: "io.vertx",       name: "vertx-core",      version: vertxVersion
   compile group: "io.vertx",       name: "vertx-web",       version: vertxVersion
-
   {% if cookiecutter.jvm_language == "kotlin" %}
   compile group: "org.jetbrains.kotlin", name: "kotlin-stdlib", version: kotlinVersion
-  {% elif cookiecutter.jvm_language == "groovy" %}
-  compile group: "org.codehaus.groovy", name: "groovy-all", version: '2.4.7'
   {% endif %}
-
   testCompile group: "io.vertx",    name: "vertx-unit",   version: vertxVersion
-  testCompile group: 'org.assertj', name: 'assertj-core', version: assertjVersion
   testCompile group: 'junit',       name: 'junit',        version: junitVersion
 }
 
@@ -81,7 +66,7 @@ tasks.withType(Tar) {
 
 // Make acquiring the Gradle wrapper painless.
 task wrapper(type: Wrapper) {
-  gradleVersion = '3.0'
+  gradleVersion = '3.1'
 }
 
 shadowJar {
