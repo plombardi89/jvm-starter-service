@@ -8,10 +8,6 @@ APP_CONFIG="config/${APP_NAME}.json"
 JAVA_EXECUTABLE=java
 JAVA_ARGS="-jar ${APP_JAR} \
 -conf ${APP_CONFIG} \
--Dmdk.service.name=${MDK_SERVICE_NAME} \
--Dmdk.service.version=${MDK_SERVICE_VERSION} \
--Dmdk.service.host=${DATAWIRE_ROUTABLE_HOST} \
--Dmdk.service.port=${DATAWIRE_ROUTABLE_PORT} \
 -Dvertx.logger-delegate-factory-class-name=io.vertx.core.logging.SLF4JLogDelegateFactory \
 -Dlogback.configurationFile=config/logback.xml"
 
